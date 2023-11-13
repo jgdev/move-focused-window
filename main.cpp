@@ -26,7 +26,6 @@ int main(int argc, char const *argv[])
         return -1;
     }
 
-    Window rootWindow = XDefaultRootWindow(display);
     Window focusedWindow;
     int rev;
 
