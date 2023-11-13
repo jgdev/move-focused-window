@@ -1,12 +1,5 @@
 #include <stdio.h>
 #include <X11/Xlib.h>
-/**
- * 1. Get mouse current display.
- * 1. Get current focused window.
- * 2. Press alt+f8 shorcut to resize window to half of the screen size.
- * 3. Press alt+f7 shorcut to move window.
- * 4. Move mouse to center of the screen.
- */
 
 int resizeWindow(Display *display, Window window, int width, int height)
 {
