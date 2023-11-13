@@ -35,8 +35,6 @@ int main(int argc, char const *argv[])
 
     // Get current screen
     Screen *screen = XDefaultScreenOfDisplay(display);
-    int xScreenCenter = screen->width / 2;
-    int yScreenCenter = screen->height / 2;
 
     // Resize current window
     resizeWindow(display, focusedWindow, screen->width / 2, screen->height);
