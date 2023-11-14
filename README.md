@@ -1,14 +1,10 @@
-# x11-center-window
-Small program to center any current focused window to the center of the screen
+# x11-move-window
+Small program to place any current focused window to the center, left or right of the screen
 
 ## Installation
 
-`make && make install` <- will copy the binary to `/usr/local/bin/center_window`
+`make && make install` <- will copy the binary to `/usr/local/bin/move_window`
 
 ## Usage
 
-Create a keyboard shortcut, for example `win+c` to execute `/usr/local/bin/center_window`.
-
-## Todo
-
-- Define variable height, actually supports only 1080px
+Create a keyboard shortcut, for example `win+c` to execute `/usr/local/bin/move_window`.
