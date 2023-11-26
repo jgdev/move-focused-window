@@ -86,7 +86,8 @@ int place_focused_window(bool isLeft, bool isRight, int width, int height, bool 
 
     if (isLeft || isRight)
     {
-        result = move_window(handle, isLeft ? 0 : screenWidth / 2, 0) + resize_window(handle, width, height - taskbar_height);
+        int x = isLeft ? 0 : screenWidth * 0.75;
+        result = move_window(handle, x, 0) + resize_window(handle, width, height - taskbar_height);
     }
     else
     {

@@ -17,19 +17,19 @@ Windows do not allow create custom keyboard so easily, but using this applicatio
 Download [https://www.autohotkey.com/](https://www.autohotkey.com/), create a new file script with `ahk` extension, for example `C:\KeyboardShortcuts\MoveFocusedWindow.ahk`, here's a little example:
 
 ```
-^+Up::
+^#Up::
 {
     RunWait "C:\Bin\move_focused_window.exe", , "Hide"
 }
 
-^+Left::
+^#Left::
 {
-    RunWait "C:\Bin\move_focused_window.exe --left", , "Hide"
+    RunWait "C:\Bin\move_focused_window.exe --left --width 960", , "Hide"
 }
 
-^+Right::
+^#Right::
 {
-    RunWait "C:\Bin\move_focused_window.exe --right --width", , "Hide"
+    RunWait "C:\Bin\move_focused_window.exe --right --width 960", , "Hide"
 }
 ```
 
@@ -54,6 +54,11 @@ Save it and double click the script to activate the custom shortcut.
  `> move_focused_window` The window will be placed in the center of the screen with half size.
 
  `> move_focused_window --right --width 600 --height 1080` The window will be moved to the right side of the screen, resizing it to `600x1080`.
+
+
+#### Default behaviour
+
+![Default behaviour](./example.png)
 
 ## To Do
 - Merge **`--left`** and **`--right`** commands to: `--left [n]` allowing move the window to an **X** point.
