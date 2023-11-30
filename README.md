@@ -39,8 +39,8 @@ Save it and double click the script to activate the custom shortcut.
 
 |Command| Description  |
 |--|--|
-| `--left` | The window will be place to the left side of the screen |
-| `--right` | The window will be place to the right side of the screen |
+| `--top` | Move the window in the Y axis of the screen |
+| `--left` | Move the window in the X axis of the screen |
 | `--width [n]` | Define the width to resize the window |
 | `--height [n]` | Define the height to resize the window |
 
@@ -56,10 +56,10 @@ Save it and double click the script to activate the custom shortcut.
  `> move_focused_window --right --width 600 --height 1080` The window will be moved to the right side of the screen, resizing it to `600x1080`.
 
 
-#### Default behaviour
+#### Example
 
 ![Default behaviour](./example.png)
 
-## To Do
-- Merge **`--left`** and **`--right`** commands to: `--left [n]` allowing move the window to an **X** point.
-- Add `--top [n]` allowing move the window to a **Y** point.
+`> move_focused_window` The window will be placed in the center of the screen with half width.
+`> move_focused_window --direction right --width 960` The window will be placed to the right side of the screen with a width of 960px.
+`> move_focused_window --direction left --width 960` The window will be placed to the right side of the screen with a width of 960px.
