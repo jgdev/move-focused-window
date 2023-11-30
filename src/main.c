@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "main.h"
 
 #ifdef _WIN32
 #include "lib/windows.c"
@@ -11,15 +12,15 @@
 #endif
 
 int arg_count;
-char **arg_values;
-char *commands[] = {"--left", "--right", "--width", "--height"};
+char **argValues;
+char *commands[] = {"--direction", "--top", "--left", "--width", "--height"};
 
-int get_arg_index(char *argument)
+int getArgIndex(char *argument)
 {
     int index = -1;
     for (int i = 0; i < arg_count; i++)
     {
-        if (strcmp(arg_values[i], argument) == 0)
+        if (strcmp(argValues[i], argument) == 0)
         {
             index = i;
         }
@@ -27,7 +28,7 @@ int get_arg_index(char *argument)
     return index;
 }
 
-bool is_arg_command(char *argument)
+bool isArgCommand(char *argument)
 {
     int length = sizeof(commands) / sizeof(commands[0]);
 
@@ -41,35 +42,59 @@ bool is_arg_command(char *argument)
     return false;
 }
 
-char *get_arg_value(char *argument)
+char *getArgValue(char *argument, char *defaultValue)
 {
     char *result = "";
-    int index = get_arg_index(argument);
+    int index = getArgIndex(argument);
     if (index > -1)
     {
-        char *arg_value = arg_values[index + 1];
-        if (arg_value == NULL || is_arg_command(arg_value))
-            return "";
-        return arg_value;
+        char *argValue = argValues[index + 1];
+        if (argValue == NULL || argValue == '\0' || isArgCommand(argValue))
+            return defaultValue;
+        return argValue;
     }
+    return defaultValue;
+}
+
+int getIntArgValue(char *argument, int defaultValue)
+{
+    char *arg = getArgValue(argument, "");
+    int result = arg[0] == '\0' ? defaultValue : atoi(arg);
     return result;
 }
 
 int main(int argc, char const *argv[])
 {
     arg_count = argc;
-    memcpy(&arg_values, &argv, sizeof(char **));
+    memcpy(&argValues, &argv, sizeof(char **));
 
-    // Define width and height parameters
-    bool isLeft = get_arg_index("--left") > -1;
-    bool isRight = get_arg_index("--right") > -1;
-    bool dryRun = get_arg_index("--dry-run") > -1;
-    char *width_arg = get_arg_value("--width");
-    char *height_arg = get_arg_value("--height");
+    bool isDryRun = getArgIndex("--dry-run") > -1;
 
-    int width = width_arg[0] == '\0' ? 0 : atoi(width_arg);
-    int height = height_arg[0] == '\0' ? 0 : atoi(height_arg);
+    struct ScreenResolution *resolution = getScreenResolution(isDryRun);
 
-    // return 0;
-    return place_focused_window(isLeft, isRight, width, height, dryRun);
+    int top = getIntArgValue("--top", 0);
+    int left = getIntArgValue("--left", 0);
+    char *direction = getArgValue("--direction", "center");
+    int width = getIntArgValue("--width", resolution->width / 2);
+    int height = getIntArgValue("--height", resolution->height);
+
+    top = getArgIndex("--height") > -1 ? (resolution->height / 2) - (height / 2) : 0;
+
+    if (strcmp(direction, "left") == 0)
+    {
+        left = 0;
+    }
+    else if (strcmp(direction, "right") == 0)
+    {
+        left = (width - resolution->width) * -1;
+    }
+    else
+    {
+        left = (resolution->width / 2) - (width / 2);
+    }
+
+    if (isDryRun)
+        printf("Direction: %s\n", direction);
+
+    placeFocusedWindow(top, left, width, height, isDryRun);
 }

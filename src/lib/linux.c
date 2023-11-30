@@ -2,70 +2,76 @@
 #include <stdio.h>
 #include <X11/Xlib.h>
 
-bool isDryRun = false;
+Display *getDisplay()
+{
+    Display *display = XOpenDisplay(NULL);
+    if (display == NULL)
+    {
+        fprintf(stderr, "Cannot open display\n");
+        return NULL;
+    }
+    return display;
+}
 
-int resize_window(Display *display, Window window, int width, int height)
+Window *getWindow(Display *display)
+{
+    Window window;
+    int revert_to;
+    XGetInputFocus(display, &window, &revert_to);
+    return window;
+}
+
+int resizeWindow(int width, int height, bool isDryRun)
+{
+    Display *display = getDisplay();
+    Window *window = getWindow(display);
+    XResizeWindow(display, window, width, height);
+    XFlush(display);
+    XCloseDisplay(display);
+}
+
+int moveWindow(int y, int x, bool isDryRun)
+{
+    Display *display = getDisplay();
+    Window *window = getWindow(display);
+    XMoveWindow(display, window, x, y);
+    XFlush(display);
+    XCloseDisplay(display);
+}
+
+struct ScreenResolution *getScreenResolution(bool isDryRun)
+{
+    struct ScreenResolution *resolution = malloc(sizeof(struct ScreenResolution));
+
+    if (isDryRun)
+    {
+        resolution->width = 3840;
+        resolution->height = 1080;
+        return resolution;
+    }
+
+    Display *display = getDisplay(isDryRun);
+    Screen *screen = XDefaultScreenOfDisplay(display);
+
+    resolution->width = screen->width;
+    resolution->height = screen->height;
+
+    if (display != NULL)
+    {
+        XCloseDisplay(display);
+    }
+
+    return resolution;
+}
+
+int placeFocusedWindow(int top, int left, int width, int height, bool isDryRun)
 {
     if (isDryRun)
     {
         printf("Resizing window to width: %d, height: %d\n", width, height);
+        printf("Moving window to left: %d, top: %d\n", x, y);
         return 0;
     }
-    return XResizeWindow(display, window, width, height) + XFlush(display);
-}
-
-int move_window(Display *display, Window window, int x, int y)
-{
-    if (isDryRun)
-    {
-        printf("Moving window to x: %d, y: %d\n", x, y);
-        return 0;
-    }
-    return XMoveWindow(display, window, x, y) + XFlush(display);
-}
-
-int place_focused_window(bool isLeft, bool isRight, int width, int height, bool dryRun)
-{
-    isDryRun = dryRun;
-
-    Display *display = isDryRun ? NULL : XOpenDisplay(NULL);
-    int result = 0;
-
-    if (display == NULL && !isDryRun)
-    {
-        fprintf(stderr, "Cannot open display\n");
-        return 1;
-    }
-
-    Window focused_window;
-    int revert_to;
-    Screen *screen;
-
-    if (!isDryRun)
-    {
-        XGetInputFocus(display, &focused_window, &revert_to);
-        screen = XDefaultScreenOfDisplay(display);
-    }
-
-    int screenWidth = isDryRun ? 3840 : screen->width;
-    int screenHeight = isDryRun ? 1080 : screen->height;
-
-    width = width == 0 ? screenWidth / 2 : width;
-    height = height == 0 ? screenHeight : height;
-
-    if (isLeft || isRight)
-    {
-
-        result = move_window(display, focused_window, isLeft ? 0 : screenWidth / 2, 0) + resize_window(display, focused_window, width, height);
-    }
-    else
-    {
-        if (isDryRun)
-        {
-            printf("Direction: center\n");
-        }
-        result = move_window(display, focused_window, width / 2, 0) + resize_window(display, focused_window, width, height);
-    }
-
-    return result;
+    moveWindow(top, left, isDryRun);
+    resizeWindow(width, height, isDryRun);
 }
