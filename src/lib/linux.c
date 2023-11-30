@@ -23,11 +23,6 @@ Window *getWindow(Display *display)
 
 int resizeWindow(int width, int height, bool isDryRun)
 {
-    if (isDryRun)
-    {
-        printf("Resizing window to width: %d, height: %d\n", width, height);
-        return 0;
-    }
     Display *display = getDisplay();
     Window *window = getWindow(display);
     XResizeWindow(display, window, width, height);
@@ -37,11 +32,6 @@ int resizeWindow(int width, int height, bool isDryRun)
 
 int moveWindow(int y, int x, bool isDryRun)
 {
-    if (isDryRun)
-    {
-        printf("Moving window to left: %d, top: %d\n", x, y);
-        return 0;
-    }
     Display *display = getDisplay();
     Window *window = getWindow(display);
     XMoveWindow(display, window, x, y);
@@ -76,6 +66,12 @@ struct ScreenResolution *getScreenResolution(bool isDryRun)
 
 int placeFocusedWindow(int top, int left, int width, int height, bool isDryRun)
 {
+    if (isDryRun)
+    {
+        printf("Resizing window to width: %d, height: %d\n", width, height);
+        printf("Moving window to left: %d, top: %d\n", x, y);
+        return 0;
+    }
     moveWindow(top, left, isDryRun);
     resizeWindow(width, height, isDryRun);
 }

@@ -86,12 +86,15 @@ int main(int argc, char const *argv[])
     }
     else if (strcmp(direction, "right") == 0)
     {
-        left = (resolution->width * 0.75);
+        left = (width - resolution->width) * -1;
     }
     else
     {
         left = (resolution->width / 2) - (width / 2);
     }
+
+    if (isDryRun)
+        printf("Direction: %s\n", direction);
 
     placeFocusedWindow(top, left, width, height, isDryRun);
 }
